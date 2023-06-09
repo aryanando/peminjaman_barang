@@ -15,7 +15,7 @@
 
 
     <!-- Bootstrap core CSS -->
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Favicons -->
     <link rel="icon" href="/assets/favicons/favicon.ico">
@@ -25,6 +25,30 @@
     <link href="/assets/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 
     <style>
+        .blink {
+            animation: blink 5s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                background: green;
+            }
+
+            100% {
+                background: white;
+            }
+        }
+
+        @-webkit-keyframes blink {
+            0% {
+                background: green;
+            }
+
+            100% {
+                background: white;
+            }
+        }
+
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -322,12 +346,12 @@
 
                 ?>
 
-                    <tr>
+                    <tr id="row-peminjaman-<?= $data['id_peminjaman'] ?>">
                         <td><?= $data['id_peminjaman'] ?></td>
-                        <td><?= $data['nama_barang'] ?></td>
+                        <td id="datatable-nama-barang-<?= $data['id_peminjaman'] ?>"><?= $data['nama_barang'] ?></td>
                         <td><?= $data['nama_siswa'] ?></td>
                         <td><?= $data['tanggal_kembali'] == "" ? '<button type="button" class="btn btn-sm btn-warning">On Process</button>' : '<button type="button" class="btn btn-sm btn-success">Done</button>' ?></td>
-                        <td><?= '<button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal" id="button-detail"
+                        <td><?= '<button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal" id="button-detail-' . $data['id_peminjaman'] . '"
                         data-bs-nama="' . $data['nama_siswa'] . '"
                         data-bs-nisn="' . $data['nisn'] . '" 
                         data-bs-namabarang="' . $data['nama_barang'] . '"
@@ -379,6 +403,9 @@
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary" type="button" onclick="enableFormUbah()" id="btnUbahBarang">Edit</button>
                                         </div>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success d-none" id="badge-ubah-barang">
+                                            Ok
+                                        </span>
                                     </div>
                                     <p class="card-text" id="data_tanggalpeminjaman">-</p>
                                     <p class="card-text" id="data_tanggalkembali">-</p>
@@ -411,7 +438,7 @@
     </div>
 
 
-    <script src="/assets/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/jquery.dataTables.min.js"></script>
     <script src="/assets/js/chart.min.js">
@@ -486,13 +513,16 @@
 
 
         var idBarang;
+        var kodeBarang;
         var idTransaksi;
+        var flagUbahData = false;
         var exampleModal = document.getElementById('exampleModal');
         exampleModal.addEventListener('show.bs.modal', function(event) {
+            $('#badge-ubah-barang').addClass('d-none');
             var button = event.relatedTarget
             var nama_siswa = button.getAttribute('data-bs-nama')
             var jurusan_siswa = button.getAttribute('data-bs-jurusan')
-            var kode_barang = button.getAttribute('data-bs-namabarang')
+            kodeBarang = button.getAttribute('data-bs-namabarang')
             var tanggal_pinjam = button.getAttribute('data-bs-tanggalpinjam')
             var id_pinjam = button.getAttribute('data-bs-idpeminjaman')
             var modalNamaSiswa = document.getElementById('nama_siswa_form_kembali')
@@ -515,23 +545,51 @@
                 $('#data_tanggalkembali').text('Barang Belum Kembali - Tekan konfirmasi untuk pengembalian barang');
                 $('#btnUbahBarang').show();
             }
-            $('#data_peminjaman').val(kode_barang);
-
+            $('#data_peminjaman').val(kodeBarang);
         })
-        $('#data_peminjaman').on('focusout', function() {
-            $('#data_peminjaman').prop('disabled', true);
-            if ($('#data_peminjaman').val() !== "") {
-                //console.log($('#data_peminjaman').val());
-                $.ajax({
-                    url: '<?= base_url() ?>home/ubah/', // The targeted resource
-                    type: 'POST', // The type of HTTP request.
-                    data: {'id' : idTransaksi, 'nama_barang' : $('#data_peminjaman').val()}, // We pass our variables
-                    dataType: 'json', // The type of data to receive, here, from HTML.
-                    success: function(data, res, status) {
-                        console.log(data);
-                    }
+        exampleModal.addEventListener('hidden.bs.modal', function(event) {
+            console.log(flagUbahData);
+            if (flagUbahData == true) {
+                $('#row-peminjaman-' + idTransaksi).addClass('blink');
+                flagUbahData = false;
+                $(function() {
+                    function show_popup() {
+                        $('#row-peminjaman-' + idTransaksi).removeClass('blink');
+                    };
+                    window.setTimeout(show_popup, 4500); // 4.5 seconds
                 });
             }
+        })
+        $('#data_peminjaman').on('focusout', function() {
+            if ($('#data_peminjaman').val() !== kodeBarang) {
+                $('#data_peminjaman').prop('disabled', true);
+                if ($('#data_peminjaman').val() !== "") {
+                    //console.log($('#data_peminjaman').val());
+                    $.ajax({
+                        url: '<?= base_url() ?>home/ubah/', // The targeted resource
+                        type: 'POST', // The type of HTTP request.
+                        data: {
+                            'id': idTransaksi,
+                            'nama_barang': $('#data_peminjaman').val()
+                        }, // We pass our variables
+                        dataType: 'json', // The type of data to receive, here, from HTML.
+                        success: function(data, res, status) {
+                            if (data['status']) {
+                                flagUbahData = true;
+                                $('#badge-ubah-barang').removeClass('d-none');
+                                $('#btnUbahBarang').hide();
+                                $('#konfirmasi').hide();
+                                $('#datatable-nama-barang-' + idTransaksi).html($('#data_peminjaman').val());
+                                $('#button-detail-' + idTransaksi).attr('data-bs-namabarang', $('#data_peminjaman').val())
+                                console.log(data);
+                            }else{
+                                alert(data['message']);
+                            }
+                        }
+                    });
+                }
+            }
+
         })
         $("#nisn-form").change(function() {
             var content = $(this).text() // the users input

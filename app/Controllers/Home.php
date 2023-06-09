@@ -68,11 +68,11 @@ class Home extends BaseController
             if ($this->PeminjamanModel->ubah($newData)) {
                 return json_encode(array('status' => true, 'id' => $data['id'], 'id_barang' => $data['nama_barang']));
             } else {
-                return json_encode(array('status' => false,));
+                return json_encode(array('status' => false, 'message' => 'data gagal diubah'));
             }
             // dd($newData);
         } else {
-            return json_encode(array('status' => false,));
+            return json_encode(array('status' => false, 'message' => 'data barang tidak ditemukan'));
         }
     }
 

@@ -26,7 +26,7 @@
 
     <style>
         .blink {
-            animation: blink 5s infinite;
+            animation: blink 5s;
         }
 
         @keyframes blink {

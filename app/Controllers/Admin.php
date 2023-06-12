@@ -15,6 +15,7 @@ class Admin extends BaseController
     public function index()
     {
         // dd ($this->PeminjamanModel->getAllData());
-        return view("admin");
+        $data['data'] = ($this->PeminjamanModel->getAllData());
+        return view("admin", $data);
     }
 }

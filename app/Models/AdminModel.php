@@ -28,4 +28,17 @@ class AdminModel extends Model
         );
         return $data;
     }
+
+    public function addSiswa($dataSiswa){
+        if ($this->builderSiswa->insert($dataSiswa)) {
+            return true;
+        }
+        return false;
+    }
+    public function addBarang($dataBarang){
+        if ($this->builderBarang->insert($dataBarang)) {
+            return true;
+        }
+        return false;
+    }
 }

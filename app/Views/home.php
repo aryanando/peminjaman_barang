@@ -224,17 +224,31 @@
                     <div class="mb-3 form-control p-3" id="input-barang-form">
                         <label for="kode-barang-form" class="form-label">Kode Barang</label>
                         <div class="input-group mb-1" id="id-form-barang">
-                            <input type="text" class="form-control" id="kode-barang-form" name="nama_barang[]" required>
+                            <input type="text" class="form-control kode-barang-form" id="kode-barang-form" name="nama_barang[]" index='0' onkeyup="checkDataBarang(this.value, this.getAttribute('index'))" required>
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-primary btn" onclick="addNewItemForm()">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                             </span>
+                            <div class="card mb-3 d-none" id="detail-barang-0" style="max-width: 540px;">
+                                <div class="row g-0">
+                                    <div class="col-md-2">
+                                        <img src="/assets/img/item/laptop2.jpg" class="img-fluid rounded-start" alt="...">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="card-body">
+                                            <small>
+                                                <p class="card-text">Laptop Asus - CPU : Core I3 - RAM : 4GB</p>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="kode-guru-form" class="form-label">Kode Guru</label>
-                        <input type="text" class="form-control" id="kode-guru-form" disabled value="1" name="kode_guru">
+                        <input type="text" class="form-control d-none" id="kode-guru-form" disabled value="1" name="kode_guru">
                     </div>
                     <input type="submit" class="btn btn-primary">
                 </form>
@@ -407,6 +421,47 @@
 
     </script>
     <script>
+        let id_form_barang = 0;
+
+        function addNewItemForm() {
+            id_form_barang++;
+            var StringGetAttrIndex = "this.getAttribute('index')"
+            $('#input-barang-form').append('<div class="input-group mb-1" id="id-form-barang' + id_form_barang + '"><input type="text" class="form-control kode-barang-form" id="kode-barang-form' + id_form_barang + '" name="nama_barang[]" onkeyup="checkDataBarang(this.value, ' + StringGetAttrIndex + ');" index="' + id_form_barang + '" required><span class="input-group-btn"><button type="button" class="btn btn-danger btn" onclick="removeFormBarang(' + id_form_barang + ')" ><i class="fa-solid">-</i></button></span><div class="card mb-3 d-none" id="detail-barang-' + id_form_barang + '" style="max-width: 540px;"><div class="row g-0"><div class="col-md-2"><img src="/assets/img/item/laptop2.jpg" class="img-fluid rounded-start" alt="..."></div><div class="col-md-10"><div class="card-body"><small><p class="card-text">Laptop Asus - CPU : Core I3 - RAM : 4GB</p></small></div></div></div></div></div>');
+            $('#id-form-barang' + id_form_barang).hide().fadeIn(600);
+        }
+
+        function removeFormBarang(params) {
+            $('#id-form-barang' + params).fadeOut(300, function() {
+                $('#id-form-barang' + params).remove();
+            });
+        }
+
+        function checkDataBarang(param, index) {
+            $.ajax({
+                url: '<?= base_url() ?>home/checkBarang/', // The targeted resource
+                type: 'GET', // The type of HTTP request.
+                dataType: 'json', // The type of data to receive, here, from HTML.
+                data: {
+                    'nama_barang': param,
+                },
+                success: function(data, res, status) {
+                    console.log(data);
+                    if (data['status']) {
+                        $('#detail-barang-' + index).hide();
+                        $('#detail-barang-' + index).removeClass('d-none');
+                        $('#detail-barang-' + index).children('.row').children('.col-md-10').children('.card-body').children('small').children('.card-text').html(data['dataBarang']['deskripsi']);
+                        $('#detail-barang-' + index).children('.row').children('.col-md-2').children('img').attr("src", "/assets/img/item/"+(data['dataBarang']['foto']));
+                        $('#detail-barang-' + index).fadeIn(1000);
+                    }else{
+                        $('#detail-barang-' + index).fadeOut(1000);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
         // Set new default font family and font color to mimic Bootstrap's default styling
         Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
         Chart.defaults.global.defaultFontColor = '#292b2c';
@@ -455,7 +510,7 @@
                     $("#Jumlah-Peminjam").text("Belum Kembali = " + <?= $no ?>);
                     $("#Total-Peminjam").text("Total Peminjaman = " + <?= $totalKeseluruhan ?>);
                 });
-                data = [<?= $no ?>, <?= $totalKeseluruhan ?>];
+                data = [<?= $totalKeseluruhan ?>, <?= $no ?>];
                 myPieChart.data.datasets[0].data = data;
                 myPieChart.update();
 
@@ -464,7 +519,6 @@
     </script>
 
     <script>
-        let id_form_barang = 0;
         $(document).ready(function() {
             $('#example').DataTable({
                 order: [
@@ -604,18 +658,6 @@
                 $('#konfirmasi').trigger('focus');
             });
         });
-
-        function addNewItemForm() {
-            id_form_barang++;
-            $('#input-barang-form').append('<div class="input-group mb-1" id="id-form-barang' + id_form_barang + '"><input type="text" class="form-control" id="kode-barang-form' + id_form_barang + '" name="nama_barang[]" required><span class="input-group-btn"><button type="button" class="btn btn-danger btn" onclick="removeFormBarang(' + id_form_barang + ')"><i class="fa-solid">-</i></button></span></div>');
-            $('#id-form-barang' + id_form_barang).hide().fadeIn(600);
-        }
-
-        function removeFormBarang(params) {
-            $('#id-form-barang' + params).fadeOut(300, function() {
-                $('#id-form-barang' + params).remove();
-            });
-        }
     </script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script>

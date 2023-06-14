@@ -31,7 +31,7 @@ class Home extends BaseController
             if ($this->getDataBarang($data['nama_barang'][0])) {
                 $newData = [
                     'id_siswa' => $this->getSiswaID($data['nisn']),
-                    'id_barang' => $this->getDataBarang($data['nama_barang'][0]),
+                    'id_barang' => $this->getDataBarang($data['nama_barang'][0])['id'],
                 ];
                 $this->PeminjamanModel->insert($newData);
                 return redirect()->to(base_url())->with('success', 'Data Berhasil Ditambahkan');
@@ -44,7 +44,7 @@ class Home extends BaseController
                 if ($this->getDataBarang($data['nama_barang'][$i])) {
                     $newData = [
                         'id_siswa' => $this->getSiswaID($data['nisn']),
-                        'id_barang' => $this->getDataBarang($data['nama_barang'][$i]),
+                        'id_barang' => $this->getDataBarang($data['nama_barang'][$i])['id'],
                     ];
                     $this->PeminjamanModel->insert($newData);
                     // dd($newData);
@@ -60,10 +60,10 @@ class Home extends BaseController
     {
         $request = \Config\Services::request();
         $data = $request->getVar();
-        if ($this->getDataBarang($data['nama_barang'])) {
+        if ($this->getDataBarang($data['nama_barang'])['id']) {
             $newData = [
                 'id' => $data['id'],
-                'id_barang' => $this->getDataBarang($data['nama_barang']),
+                'id_barang' => $this->getDataBarang($data['nama_barang'])['id'],
             ];
             if ($this->PeminjamanModel->ubah($newData)) {
                 return json_encode(array('status' => true, 'id' => $data['id'], 'id_barang' => $data['nama_barang']));
@@ -73,6 +73,18 @@ class Home extends BaseController
             // dd($newData);
         } else {
             return json_encode(array('status' => false, 'message' => 'data barang tidak ditemukan'));
+        }
+    }
+
+    function checkBarang()
+    {
+        $request = \Config\Services::request();
+        $data = $request->getVar();
+        $dataBarang = $this->getDataBarang($data['nama_barang']);
+        if ($dataBarang) {
+            return json_encode(array ('dataBarang' => $dataBarang, 'status' => true));
+        }else {
+            return json_encode(array ('status' => false));
         }
     }
 
@@ -93,7 +105,7 @@ class Home extends BaseController
         $userModel = model('BarangModel');
         $dataBarang = $userModel->BarangByName($var);
         if ($dataBarang !== Null) {
-            return $dataBarang['id'];
+            return $dataBarang;
         } else {
             return false;
         }

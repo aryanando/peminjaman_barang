@@ -254,8 +254,8 @@
                 </form>
             </div>
             <!-- Data Siswa Peminjam -->
-            <div class="col">
-                <div class="card" style="width: 18rem; width: auto;">
+            <div class="col ">
+                <div class="card h-100" style="width: 18rem; width: auto;">
                     <img src="https://mm.widyatama.ac.id/wp-content/uploads/2020/08/dummy-profile-pic-male1.jpg" class="rounded mx-auto d-block" alt="..." id="foto-form-peminjaman" style="max-width: 200px;">
                     <div class="card-body">
                         <h5 class="card-title" id="nama-form-peminjaman">Nama</h5>
@@ -266,7 +266,7 @@
             </div>
             <!-- Count -->
             <div class="col">
-                <div class="card" style="width: auto;">
+                <div class="card h-100" style="width: auto;">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item">

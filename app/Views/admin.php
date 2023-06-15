@@ -225,11 +225,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="inputNamaBarang" class="form-label">Nama :</label>
-                        <input type="text" class="form-control" id="inputNamaBarang" aria-describedby="namaBarangHelp">
-                        <div id="namaBarangHelp" class="form-text d-none">Masukkan nama Barang</div>
-                    </div>
+                    <form action="" id="formBarang">
+                        <div class="mb-3">
+                            <label for="inputNamaBarang" class="form-label">Nama :</label>
+                            <input type="text" class="form-control" id="inputNamaBarang" aria-describedby="namaBarangHelp" name="nama">
+                            <div id="namaBarangHelp" class="form-text d-none">Masukkan nama Barang</div>
+                        </div>
+                        <div class="inputDeskripsiBarang">
+                            <label for="inputDeskripsiBarang">Deskripsi :</label>
+                            <textarea class="form-control" id="inputDeskripsiBarang" name="deskripsi" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFileSm" class="form-label">Foto :</label>
+                            <input class="form-control form-control-sm" id="formFileSm" type="file" name="foto">
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -297,13 +307,22 @@
         })
 
         function addBarang() {
+            var dataBarang = new FormData($('#formBarang')[0]);
             $.ajax({
                 url: '<?= base_url() ?>admin/tambahbarang/', // The targeted resource
                 type: 'POST', // The type of HTTP request.
-                data: {
-                    ['nama']: $('#inputNamaBarang').val(),
-                }, // We pass our variables
+                data: dataBarang,
+                // {
+                //     // ['deskripsi']: $('#inputDeskripsiBarang').val(),
+                //     // ['nama']: $('#inputNamaBarang').val(),
+                //     // ['foto']: $('#inputFotoBarang').prop('files'),
+                // }, // We pass our variables
                 dataType: 'json', // The type of data to receive, here, from HTML.
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
                 success: function(data, res, status) {
                     console.log(data);
                     if (data['status']) {

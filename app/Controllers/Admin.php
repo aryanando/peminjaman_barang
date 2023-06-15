@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\AdminModel;
+use CodeIgniter\Files\File;
+use PhpParser\Node\Expr\Isset_;
 
 class Admin extends BaseController
 {
@@ -19,22 +21,37 @@ class Admin extends BaseController
         return view("admin", $data);
     }
 
-    public function tambahSiswa() {
+    public function tambahSiswa()
+    {
         $request = \Config\Services::request();
         $data = $request->getVar();
         if ($this->PeminjamanModel->addSiswa($data)) {
             $dataReturn['status'] = true;
-        }else{
+        } else {
             $dataReturn['status'] = false;
         }
         return json_encode($dataReturn);
     }
-    public function tambahBarang() {
+    public function tambahBarang()
+    {
         $request = \Config\Services::request();
         $data = $request->getVar();
+        $dataReturn['data'] = $data;
+
+        if ($this->validate(['foto' => 'uploaded[foto]|max_size[foto,1024]',])) {
+            $img = $this->request->getFile('foto');
+            $newName = $img->getRandomName();
+            $img->move(ROOTPATH . 'public/assets/img/item/', $newName);
+            if ($img->hasMoved()) {
+                $filepath = ROOTPATH . 'public/assets/img/item/' . $newName;
+                $data1 = ['uploaded_fileinfo' => new File($filepath)];
+                $data['foto'] = $data1['uploaded_fileinfo']->getBasename();
+            }
+        }
         if ($this->PeminjamanModel->addBarang($data)) {
+            $dataReturn['data'] = $data;
             $dataReturn['status'] = true;
-        }else{
+        } else {
             $dataReturn['status'] = false;
         }
         return json_encode($dataReturn);

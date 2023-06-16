@@ -214,7 +214,7 @@
     <main class="container overflow-auto">
         <div class="row my-3">
             <!-- Form Peminjaman -->
-            <div class="col">
+            <div class="col-12 col-sm-4">
                 <form method="post" action="<?= base_url() ?>home/pinjam">
                     <div class="mb-3">
                         <label for="nisn-form" class="form-label">NISN / NAMA SISWA</label>
@@ -254,9 +254,9 @@
                 </form>
             </div>
             <!-- Data Siswa Peminjam -->
-            <div class="col ">
-                <div class="card h-100" style="width: 18rem; width: auto;">
-                    <img src="https://mm.widyatama.ac.id/wp-content/uploads/2020/08/dummy-profile-pic-male1.jpg" class="rounded mx-auto d-block" alt="..." id="foto-form-peminjaman" style="max-width: 200px;">
+            <div class="col-12 col-sm-4">
+                <div class="card h-100" style="width: auto;">
+                    <img src="https://mm.widyatama.ac.id/wp-content/uploads/2020/08/dummy-profile-pic-male1.jpg" class="rounded mx-auto d-block img-fluid" alt="..." id="foto-form-peminjaman" style="max-width: 200px;">
                     <div class="card-body">
                         <h5 class="card-title" id="nama-form-peminjaman">Nama</h5>
                         <p class="card-text" id="jurusan-form-peminjaman">-</p>
@@ -265,7 +265,7 @@
                 </div>
             </div>
             <!-- Count -->
-            <div class="col">
+            <div class="col-12 col-sm-4">
                 <div class="card h-100" style="width: auto;">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs">

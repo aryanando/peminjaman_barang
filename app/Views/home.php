@@ -9,8 +9,8 @@
     <meta name="generator" content="Hugo 0.84.0">
     <title>APLIKASI PEMINJAMAN SMKISLAM BATU</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/css/jquery-ui.css">
 
 
     <!-- Bootstrap core CSS -->
@@ -659,7 +659,7 @@
             });
         });
     </script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
     <script>
         $(function() {
             var availableTags = [

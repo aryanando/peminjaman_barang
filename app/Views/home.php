@@ -288,6 +288,16 @@
                 </div>
             </div>
         </div>
+        <div class="row my-3">
+            <div class="p-2 border rounded" style="border-color:gray;">
+                Batasi Data : 
+                <button type="button" class="btn <?=$limit == 10 ? 'btn-success aktif' : 'btn-light non-aktif' ?>" onclick="location.href='<?=base_url()?>?limit=10'">10</button>
+                <button type="button" class="btn <?=$limit == 50 ? 'btn-success aktif' : 'btn-light non-aktif' ?>" onclick="location.href='<?=base_url()?>?limit=50'">50</button>
+                <button type="button" class="btn <?=$limit == 100 ? 'btn-success aktif' : 'btn-light non-aktif' ?>" onclick="location.href='<?=base_url()?>?limit=100'">100</button>
+                <button type="button" class="btn <?=$limit == 250 ? 'btn-success aktif' : 'btn-light non-aktif' ?>" onclick="location.href='<?=base_url()?>?limit=250'">250</button>
+                <button type="button" class="btn <?=$limit == 0 ? 'btn-success aktif' : 'btn-light non-aktif' ?>" onclick="location.href='<?=base_url()?>?limit=0'">Unlimited</button>
+            </div>
+        </div>
         <!-- Data Peminjaman All -->
         <table id="example" class="display " style="width:100%">
             <thead>
@@ -450,9 +460,9 @@
                         $('#detail-barang-' + index).hide();
                         $('#detail-barang-' + index).removeClass('d-none');
                         $('#detail-barang-' + index).children('.row').children('.col-md-10').children('.card-body').children('small').children('.card-text').html(data['dataBarang']['deskripsi']);
-                        $('#detail-barang-' + index).children('.row').children('.col-md-2').children('img').attr("src", "/assets/img/item/"+(data['dataBarang']['foto']));
+                        $('#detail-barang-' + index).children('.row').children('.col-md-2').children('img').attr("src", "/assets/img/item/" + (data['dataBarang']['foto']));
                         $('#detail-barang-' + index).fadeIn(1000);
-                    }else{
+                    } else {
                         $('#detail-barang-' + index).fadeOut(1000);
                     }
                 },

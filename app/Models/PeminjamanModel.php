@@ -27,7 +27,12 @@ class PeminjamanModel extends Model
 
     public function findAll(int $limit = 0, int $offset = 0)
     {
-        $result = $this->db->query('SELECT p.id id_peminjaman, p.id_siswa, s.nisn, s.nama nama_siswa, s.foto foto_siswa, s.jurusan, p.id_barang, b.nama nama_barang, b.foto foto_barang, p.tanggal_pinjam,p.tanggal_kembali,p.penanggung_jawab FROM peminjaman p JOIN siswa s on p.id_siswa = s.id JOIN barang b on p.id_barang = b.id', false);
+        if ($limit == 0) {
+            $result = $this->db->query('SELECT p.id id_peminjaman, p.id_siswa, s.nisn, s.nama nama_siswa, s.foto foto_siswa, s.jurusan, p.id_barang, b.nama nama_barang, b.foto foto_barang, p.tanggal_pinjam,p.tanggal_kembali,p.penanggung_jawab FROM peminjaman p JOIN siswa s on p.id_siswa = s.id JOIN barang b on p.id_barang = b.id ORDER BY p.tanggal_kembali', false);
+        }else{
+            $result = $this->db->query('SELECT p.id id_peminjaman, p.id_siswa, s.nisn, s.nama nama_siswa, s.foto foto_siswa, s.jurusan, p.id_barang, b.nama nama_barang, b.foto foto_barang, p.tanggal_pinjam,p.tanggal_kembali,p.penanggung_jawab FROM peminjaman p JOIN siswa s on p.id_siswa = s.id JOIN barang b on p.id_barang = b.id ORDER BY p.tanggal_kembali LIMIT ' . $limit, false);
+        }
+        
         return $result->getResultArray();
     }
 

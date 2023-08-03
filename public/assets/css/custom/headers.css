@@ -30,3 +30,15 @@
 .dropdown-toggle {
   outline: 0;
 }
+
+.aktif:hover {
+  color: #fff;
+  background-color: #0495c9;
+  border-color: #357ebd;
+}
+
+.non-aktif:hover {
+  color: #fff;
+  background-color: #0495c9;
+  border-color: #357ebd;
+}

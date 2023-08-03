@@ -13,11 +13,33 @@ class Home extends BaseController
     }
     public function index()
     {
-        $data['dataPeminjaman'] = $this->PeminjamanModel->findAll();
+        $session = session();
+        $request = \Config\Services::request();
+        $req = $request->getVar();
         $data['dataSiswa'] = $this->getAllSiswa();
-        //dd($data);
+        // dd($req);
+        if (isset($req['limit'])) {
+            if ($req['limit'] == 0) {
+                $session->set('limit', $req['limit']);
+                $data['dataPeminjaman'] = $this->PeminjamanModel->findAll();
+            } else if ($req['limit'] > 0) {
+                $session->set('limit', $req['limit']);
+                $data['dataPeminjaman'] = $this->PeminjamanModel->findAll($req['limit']);
+            }
+        } else {
+            if (($session->has('limit'))) {
+                if ($session->get('limit') == 0) {
+                    $data['dataPeminjaman'] = $this->PeminjamanModel->findAll();
+                } else {
+                    $data['dataPeminjaman'] = $this->PeminjamanModel->findAll($session->get('limit'));
+                }
+            } else {
+                $session->set('limit', 0);
+                $data['dataPeminjaman'] = $this->PeminjamanModel->findAll();
+            }
+        }
+        $data['limit'] = $session->get('limit');
         return view('home', $data);
-        //dd($dataPemninjaman);
     }
     public function kembali($id = null)
     {
@@ -82,9 +104,9 @@ class Home extends BaseController
         $data = $request->getVar();
         $dataBarang = $this->getDataBarang($data['nama_barang']);
         if ($dataBarang) {
-            return json_encode(array ('dataBarang' => $dataBarang, 'status' => true));
-        }else {
-            return json_encode(array ('status' => false));
+            return json_encode(array('dataBarang' => $dataBarang, 'status' => true));
+        } else {
+            return json_encode(array('status' => false));
         }
     }
 

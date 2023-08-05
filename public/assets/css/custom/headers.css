@@ -42,3 +42,50 @@
   background-color: #0495c9;
   border-color: #357ebd;
 }
+
+.notif-card {
+  border: none;
+  transition: 0.3s;
+}
+
+.notif-card:hover {
+  background-color: #E5E4E2;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -5px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+
+.notification {
+  color: white;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.parent {
+  height: auto;
+  width: ayto;
+  position: relative;
+}
+
+.child {
+  background: #0dcaf0;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0 0 0 0;
+}
+
+.notification__readed {
+  color: gray;
+}
